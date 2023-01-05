@@ -1,0 +1,13 @@
+{
+  "name": "@albelli/qa-engineer-playwright-test",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "test": "node_modules/.bin/playwright test",
+    "report": "node_modules/.bin/playwright show-report"
+  },
+  "dependencies": {
+    "@playwright/test": "1.17.2",
+    "jdenticon": "3.1.1"
+  }
+}
