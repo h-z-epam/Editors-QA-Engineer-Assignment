@@ -1,8 +1,9 @@
 import { test, expect } from "../setup";
-import { PhotoSelectorPage } from "../pages/PhotoSelectorPage";
-import { BookPreviewPage } from "../pages/BookPreviewPage";
-import { ProductConfigPage } from "../pages/ProductConfigPage";
-import { BasketPage } from "../pages/BasketPage";
+import {
+  PhotoSelectorPage, BookPreviewPage,
+  ProductConfigPage, BasketPage
+} from "../pages";
+
 
 const BOOK_NAME = 'A';
 const BOOK_PRICE = '£ 23.49';
