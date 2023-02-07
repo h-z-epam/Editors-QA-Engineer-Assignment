@@ -61,7 +61,7 @@ test.describe("Photobook", () => {
     await test.step("select matte finish", async () => {
       const productConfigPage = new ProductConfigPage(page);
 
-      productConfigPage.dismissCookieModal();
+      await productConfigPage.dismissCookieModal();
       await productConfigPage.selectMatteFinish();
       await expect(productConfigPage.totalPrice).toHaveText(BOOK_PRICE);
     });
@@ -71,7 +71,6 @@ test.describe("Photobook", () => {
       await productConfigPage.continueButton.click();
       const basketPage = new BasketPage(page);
 
-      await page.pause();
       await expect(basketPage.productTitle).toHaveText(BOOK_NAME);
       await expect(basketPage.cartItemDetails).toHaveText(BOOK_DETAILS_SHORT);
       await expect(basketPage.cartItemPrice).toHaveText(BOOK_PRICE);
