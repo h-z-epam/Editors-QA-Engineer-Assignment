@@ -2,16 +2,21 @@ import { writeFile, mkdir } from "fs/promises";
 import type { Locator, Page } from "@playwright/test";
 import { toPng } from "jdenticon";
 
-export class PhotoSelectorLayout {
+export class PhotoSelectorPage {
+  readonly page: Page;
   readonly browsePhotosInput: Locator;
   readonly uploadStatsText: Locator;
   readonly addPhotosButton: Locator;
-  readonly page: Page;
+  readonly generateBookAnimation: Locator;
+  readonly previewBook: Locator;
+
   constructor(private p: Page) {
     this.page = p;
     this.browsePhotosInput = this.page.locator("[data-tam=browse-photos]");
     this.uploadStatsText = this.page.locator("[data-tam=upload-stats]");
     this.addPhotosButton = this.page.locator("[data-tam=add-photos-button]");
+    this.generateBookAnimation = this.page.locator('.generate-book-animation');
+    this.previewBook = this.page.locator('[data-tam="preview-book"]');
   }
 
   /**
@@ -38,6 +43,11 @@ export class PhotoSelectorLayout {
   async waitForUploadsComplete(): Promise<void> {
     await this.uploadStatsText.waitFor({ state: "visible" });
     await this.uploadStatsText.waitFor({ state: "detached" });
+  }
+  async waitForGenerationComplete(): Promise<void> {
+    await this.generateBookAnimation.waitFor({ state: "visible" });
+    await this.generateBookAnimation.waitFor({ state: "hidden" });
+    await this.previewBook.waitFor({ state: "visible" });
   }
 
   async clickOnUsePhotos(): Promise<void> {
