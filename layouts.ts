@@ -3,11 +3,16 @@ import type { Locator, Page } from "@playwright/test";
 import { toPng } from "jdenticon";
 
 export class PhotoSelectorLayout {
-  readonly browsePhotosInput = "[data-tam=browse-photos]";
-  readonly uploadStatsText = "[data-tam=upload-stats]";
-  readonly addPhotosButton = "[data-tam=add-photos-button]";
-
-  constructor(private page: Page) {}
+  readonly browsePhotosInput: Locator;
+  readonly uploadStatsText: Locator;
+  readonly addPhotosButton: Locator;
+  readonly page: Page;
+  constructor(private p: Page) {
+    this.page = p;
+    this.browsePhotosInput = this.page.locator("[data-tam=browse-photos]");
+    this.uploadStatsText = this.page.locator("[data-tam=upload-stats]");
+    this.addPhotosButton = this.page.locator("[data-tam=add-photos-button]");
+  }
 
   /**
    * Create and upload a certain amount of PNG photos.
@@ -26,16 +31,16 @@ export class PhotoSelectorLayout {
       })
     );
     // Set the photos as input to the test.
-    await this.page.setInputFiles(this.browsePhotosInput, images);
+    await this.browsePhotosInput.setInputFiles(images);
     return images.length;
   }
 
   async waitForUploadsComplete(): Promise<void> {
-    await this.page.waitForSelector(this.uploadStatsText, { state: "visible" });
-    await this.page.waitForSelector(this.uploadStatsText, { state: "detached" });
+    await this.uploadStatsText.waitFor({ state: "visible" });
+    await this.uploadStatsText.waitFor({ state: "detached" });
   }
 
   async clickOnUsePhotos(): Promise<void> {
-    await this.page.click(this.addPhotosButton);
+    await this.addPhotosButton.click();
   }
 }
