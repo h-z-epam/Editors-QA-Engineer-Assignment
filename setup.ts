@@ -64,3 +64,5 @@ function getInstantEditorUrl(env: TestEnvironment, channel: Channel, articleType
   url.searchParams.set("testExecution", "true");
   return url.href;
 }
+
+export { expect } from '@playwright/test';
