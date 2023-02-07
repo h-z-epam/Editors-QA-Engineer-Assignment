@@ -1,9 +1,4 @@
 import { test, expect } from "../setup";
-import {
-  PhotoSelectorPage, BookPreviewPage,
-  ProductConfigPage, BasketPage
-} from "../pages";
-
 
 const BOOK_NAME = 'A';
 const BOOK_PRICE = '£ 23.49';
@@ -12,25 +7,21 @@ const BOOK_DETAILS_SHORT = "Square M 14x14 cm";
 const DELIVERY_COST = "£ 5.49"
 const TOTAL_COST = "£ 28.98"
 test.describe("Photobook", () => {
-  test("happy path", async ({ page, getInstantEditorUrl }) => {
+  test("happy path", async ({ page, getInstantEditorUrl, photoSelectorPage, bookPreviewPage, productConfigPage, basketPage }) => {
     await test.step("open photobook", async () => {
       const editorUrl = getInstantEditorUrl("bonusprint.co.uk", "HardCoverPhotoBook", "PAP_360");
       await page.goto(editorUrl);
     });
 
     await test.step("upload photos", async () => {
-      const photoSelector = new PhotoSelectorPage(page);
-      await photoSelector.createAndUploadRandomPhotos(24);
-      await photoSelector.waitForUploadsComplete();
-      await photoSelector.clickOnUsePhotos();
+      await photoSelectorPage.createAndUploadRandomPhotos(24);
+      await photoSelectorPage.waitForUploadsComplete();
+      await photoSelectorPage.clickOnUsePhotos();
     });
 
     await test.step("create book", async () => {
-      const photoSelector = new PhotoSelectorPage(page);
-      const bookPreviewPage = new BookPreviewPage(page);
-
-      await photoSelector.clickOnUsePhotos();
-      await photoSelector.waitForGenerationComplete();
+      await photoSelectorPage.clickOnUsePhotos();
+      await photoSelectorPage.waitForGenerationComplete();
 
       await expect(bookPreviewPage.header).toHaveText("Your photo book is ready");
       await expect(bookPreviewPage.productTitle).toHaveText(BOOK_DETAILS_LONG);
@@ -42,25 +33,19 @@ test.describe("Photobook", () => {
       await expect(bookPreviewPage.pages).toBeVisible;
     });
     await test.step("add book name", async () => {
-      const bookPreviewPage = new BookPreviewPage(page);
       await bookPreviewPage.addToBasketButton.click();
       await bookPreviewPage.waitForBookTitleModalOpen()
       await bookPreviewPage.fillTitleModalNameInput(BOOK_NAME);
       await bookPreviewPage.titleModalConfirmButton.click();
     });
     await test.step("add book to basket", async () => {
-      const bookPreviewPage = new BookPreviewPage(page);
       await bookPreviewPage.addToBasket();
-
-      const productConfigPage = new ProductConfigPage(page);
-      productConfigPage.dismissCookieModal();
 
       await expect(productConfigPage.cartItemTitle).toHaveText(BOOK_NAME);
       await expect(productConfigPage.cartItemDetails).toHaveText(BOOK_DETAILS_SHORT);
       await expect(productConfigPage.cartItemPrice).toHaveText(BOOK_PRICE);
     });
     await test.step("select matte finish", async () => {
-      const productConfigPage = new ProductConfigPage(page);
 
       await productConfigPage.dismissCookieModal();
       await productConfigPage.selectMatteFinish();
@@ -68,9 +53,7 @@ test.describe("Photobook", () => {
     });
 
     await test.step("proceed to cart", async () => {
-      const productConfigPage = new ProductConfigPage(page);
       await productConfigPage.continueButton.click();
-      const basketPage = new BasketPage(page);
 
       await expect(basketPage.productTitle).toHaveText(BOOK_NAME);
       await expect(basketPage.cartItemDetails).toHaveText(BOOK_DETAILS_SHORT);
