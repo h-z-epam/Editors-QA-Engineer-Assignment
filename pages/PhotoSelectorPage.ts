@@ -19,6 +19,7 @@ export class PhotoSelectorPage {
     this.previewBook = this.page.locator('[data-tam="preview-book"]');
   }
 
+
   /**
    * Create and upload a certain amount of PNG photos.
    * @param amount

@@ -1,4 +1,8 @@
 import { test as base } from "@playwright/test";
+import {
+  PhotoSelectorPage, BookPreviewPage,
+  ProductConfigPage, BasketPage
+} from "./pages";
 
 export type TestEnvironment = "test" | "acceptance" | "production";
 export type Channel = "bonusprint.co.uk";
@@ -6,6 +10,10 @@ export type ArticleType = "HardCoverPhotoBook";
 export type TestConfig = {
   testEnvironment: TestEnvironment;
   getInstantEditorUrl: (channel: Channel, articleType: ArticleType, papId: string) => string;
+  bookPreviewPage: BookPreviewPage;
+  photoSelectorPage: PhotoSelectorPage;
+  productConfigPage: ProductConfigPage;
+  basketPage: BasketPage;
 };
 
 export const testEnvironment: TestEnvironment = getAndValidateEnvironment(process.env.TEST_ENV);
@@ -15,6 +23,22 @@ export const test = base.extend<TestConfig>({
   getInstantEditorUrl: async ({ testEnvironment }, use) => {
     await use(getInstantEditorUrl.bind(this, testEnvironment));
   },
+  photoSelectorPage: async ({ page }, use) => {
+    const photoSelectorPage = new PhotoSelectorPage(page);
+    use(photoSelectorPage)
+  },
+  bookPreviewPage: async ({ page }, use) => {
+    const bookPreviewPage = new BookPreviewPage(page);
+    use(bookPreviewPage)
+  },
+  productConfigPage: async ({ page }, use) => {
+    const productConfigPage = new ProductConfigPage(page);
+    use(productConfigPage)
+  },
+  basketPage: async ({ page }, use) => {
+    const basketPage = new BasketPage(page);
+    use(basketPage);
+  }
 });
 
 /**
